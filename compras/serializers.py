@@ -9,7 +9,7 @@ class FornecedorSerializer(serializers.ModelSerializer):
 class ProdutoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Produto
-        exclude = []
+        fields = '__all__'
 
 class Pedido_comprasSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,7 +19,7 @@ class Pedido_comprasSerializer(serializers.ModelSerializer):
 class Item_pedido_comprasSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item_pedido_compras
-        exclude = []
+        fields = '__all__'
 
 class EstoqueSerializer(serializers.ModelSerializer):
     class Meta:

@@ -51,12 +51,27 @@ class Item_pedido_compras(models.Model):
     preco_unitario = models.DecimalField(max_digits=10, decimal_places=2)
     valor_total = models.DecimalField(max_digits=10, decimal_places=2)
 
+    def calcular_vlr_total(self): #revisar
+        total = self.qtd * self.preco_unitario 
+        return total
+    
     def __str__(self):
-        return self.item
+        return f'{self.qtd} x {self.item.descricao}' #revisar
     
 class Estoque(models.Model):
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
     saldo_est = models.FloatField(max_length=10)
+
+    def adicionar_estoque(self, qtd): #revisar
+        self.saldo_est += qtd
+        self.save()
+
+    def reduzir_estoque(self, quantidade): #revisar
+        self.saldo_est -= quantidade
+        self.save()
+
+    def verificar_disponibilidade(self): #revisar
+        return self.saldo_est > 0
 
     def __str__(self):
         return self.saldo_est

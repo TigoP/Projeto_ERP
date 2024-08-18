@@ -4,20 +4,20 @@ from rest_framework import viewsets
 
 class FornecedorViewSet(viewsets.ModelViewSet):
     queryset = Fornecedor.objects.all()
-    serializer = FornecedorSerializer
+    serializer_class = FornecedorSerializer
 
 class ProdutoViewSet(viewsets.ModelViewSet):
     queryset = Produto.objects.all()
-    serializer = ProdutoSerializer
+    serializer_class = ProdutoSerializer
 
 class Pedido_comprasViewSet(viewsets.ModelViewSet):
     queryset = Pedido_compras.objects.all()
-    serializer = Pedido_comprasSerializer
+    serializer_class = Pedido_comprasSerializer
 
 class Item_pedido_comprasViewSet(viewsets.ModelViewSet):
     queryset = Item_pedido_compras.objects.all()
-    serializer = Item_pedido_comprasSerializer
+    serializer_class = Item_pedido_comprasSerializer
 
 class EstoqueViewSet(viewsets.ModelViewSet):
     queryset = Estoque.objects.all()
-    serializer = EstoqueSerializer
+    serializer_class = EstoqueSerializer

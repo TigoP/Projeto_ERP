@@ -4,4 +4,5 @@ from common.models import Endereco
 class EnderecoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Endereco
-        exclude = []
+        fields = '__all__'
+        

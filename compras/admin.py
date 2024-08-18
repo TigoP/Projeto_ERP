@@ -1,6 +1,5 @@
 from django.contrib import admin
 from compras.models import Fornecedor, Produto, Pedido_compras, Item_pedido_compras, Estoque
-from common.models import Endereco
 
 class Fornecedores(admin.ModelAdmin):
     list_display = ('cod_forn', 'nm_fantasia', 'rz_social', 'end_forn', 'nm_contato', 'email', 'telefone', 'cnpj')
@@ -31,9 +30,3 @@ class Estoques(admin.ModelAdmin):
     list_display_links = ('id', 'produto',)
     search_fields = ('produto',)
 admin.site.register(Estoque, Estoques)
-
-class Enderecos(admin.ModelAdmin):
-    list_display = ('id', 'logradouro', 'numero', 'cep', 'bairro', 'cidade', 'estado', 'complemento')
-    list_display_links = ('id', 'logradouro',)
-    search_fields = ('logradouro',)
-admin.site.register(Endereco, Enderecos)

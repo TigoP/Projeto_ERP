@@ -4,4 +4,4 @@ from rest_framework import viewsets
 
 class EnderecoViewSet(viewsets.ModelViewSet):
     queryset = Endereco.objects.all()
-    serializer = EnderecoSerializer
+    serializer_class = EnderecoSerializer
