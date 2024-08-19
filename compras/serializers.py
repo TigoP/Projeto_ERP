@@ -11,14 +11,16 @@ class ProdutoSerializer(serializers.ModelSerializer):
         model = Produto
         fields = '__all__'
 
-class Pedido_comprasSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Pedido_compras
-        fields = '__all__'
-
 class Item_pedido_comprasSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item_pedido_compras
+        fields = '__all__'
+
+class Pedido_comprasSerializer(serializers.ModelSerializer):
+    itens = Item_pedido_comprasSerializer(many=True, read_only=True) #.
+
+    class Meta:
+        model = Pedido_compras
         fields = '__all__'
 
 class EstoqueSerializer(serializers.ModelSerializer):

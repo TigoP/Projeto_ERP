@@ -29,7 +29,7 @@ class Produto(models.Model):
     un_medida = models.CharField(max_length=2, choices=MEDIDA, blank=False, default='UN')
 
     def __str__(self):
-        return self.cod_prod
+        return self.descricao #.
     
 class Pedido_compras(models.Model):
     STATUS = (
@@ -42,37 +42,40 @@ class Pedido_compras(models.Model):
     status = models.CharField(max_length=1, choices= STATUS, blank=False, default='A')
 
     def __str__(self):
-        return self.pedido
+        return f'Pedido {self.pedido} - {self.fornecedor.nm_fantasia}' #.
 
 class Item_pedido_compras(models.Model):
-    ped_compras = models.ForeignKey(Pedido_compras, on_delete=models.CASCADE)
+    ped_compras = models.ForeignKey(Pedido_compras, related_name='itens', on_delete=models.CASCADE) #.
     item = models.ForeignKey(Produto, on_delete=models.CASCADE)
     qtd = models.PositiveIntegerField(null=False, blank=False)
     preco_unitario = models.DecimalField(max_digits=10, decimal_places=2)
-    valor_total = models.DecimalField(max_digits=10, decimal_places=2)
+    valor_total = models.DecimalField(max_digits=10, decimal_places=2, editable=False) #.
 
-    def calcular_vlr_total(self): #revisar
-        total = self.qtd * self.preco_unitario 
-        return total
+    def save(self, *args, **kwargs): #.
+        self.valor_total = self.calcular_vlr_total() #.
+        super().save(*args, **kwargs) #.
+
+    def calcular_vlr_total(self): 
+        return self.qtd * self.preco_unitario #.
     
     def __str__(self):
-        return f'{self.qtd} x {self.item.descricao}' #revisar
+        return f'{self.qtd} x {self.item.descricao}'
     
 class Estoque(models.Model):
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
-    saldo_est = models.FloatField(max_length=10)
+    saldo_est = models.FloatField()
 
-    def adicionar_estoque(self, qtd): #revisar
+    def adicionar_estoque(self, qtd):
         self.saldo_est += qtd
         self.save()
 
-    def reduzir_estoque(self, quantidade): #revisar
+    def reduzir_estoque(self, quantidade):
         self.saldo_est -= quantidade
         self.save()
 
-    def verificar_disponibilidade(self): #revisar
+    def verificar_disponibilidade(self):
         return self.saldo_est > 0
 
     def __str__(self):
-        return self.saldo_est
+        return f'{self.produto.descricao} - {self.saldo_est} em estoque' #.
     

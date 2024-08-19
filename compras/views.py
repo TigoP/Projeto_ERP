@@ -14,6 +14,11 @@ class Pedido_comprasViewSet(viewsets.ModelViewSet):
     queryset = Pedido_compras.objects.all()
     serializer_class = Pedido_comprasSerializer
 
+    def create_pedido(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        #vou pensar numa lógica para vir os itens junto ao pedido com a lista de itens
+        return response
+
 class Item_pedido_comprasViewSet(viewsets.ModelViewSet):
     queryset = Item_pedido_compras.objects.all()
     serializer_class = Item_pedido_comprasSerializer
