@@ -2,7 +2,7 @@ from django.contrib import admin
 from compras.models import Fornecedor, Produto, Pedido_compras, Item_pedido_compras, Estoque
 
 class Fornecedores(admin.ModelAdmin):
-    list_display = ('cod_forn', 'nm_fantasia', 'rz_social', 'end_forn', 'nm_contato', 'email', 'telefone', 'cnpj')
+    list_display = ('cod_forn', 'nm_fantasia', 'rz_social', 'cnpj', 'ie', 'nm_contato', 'email', 'telefone', 'status', 'end_forn')
     list_display_links = ('cod_forn', 'nm_fantasia',)
     search_fields = ('nm_fantasia',)
 admin.site.register(Fornecedor, Fornecedores)
@@ -15,13 +15,13 @@ admin.site.register(Produto, Produtos)
 
 class Pedidos_Compras(admin.ModelAdmin):
     list_display = ('pedido', 'emissao', 'fornecedor', 'status')
-    list_display_links = ('pedido',)
+    list_display_links = ('pedido', 'fornecedor',)
     search_fields = ('pedido',)
 admin.site.register(Pedido_compras, Pedidos_Compras)
 
 class Itens_pedidos_compras(admin.ModelAdmin):
     list_display = ('ped_compras', 'item', 'qtd', 'preco_unitario', 'valor_total')
-    list_display_links = ('ped_compras',)
+    list_display_links = ('ped_compras','item',)
     search_fields = ('ped_compras',)
 admin.site.register(Item_pedido_compras, Itens_pedidos_compras)
 

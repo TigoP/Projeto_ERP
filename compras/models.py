@@ -2,14 +2,21 @@ from django.db import models
 from common.models import Endereco
 
 class Fornecedor(models.Model):
+    STATUS = (
+        ('A', 'Ativo'),
+        ('I', 'Inativo'),
+    )
+
     cod_forn = models.AutoField(primary_key=True)
     nm_fantasia = models.CharField(max_length=150)
     rz_social = models.CharField(max_length=150)
     end_forn = models.ForeignKey(Endereco, on_delete=models.CASCADE)
+    cnpj = models.CharField(max_length=14)
+    ie = models.CharField(max_length=11, null=True) 
     nm_contato = models.CharField(max_length=100)
     email = models.EmailField(max_length=30)
     telefone = models.CharField(max_length=16)
-    cnpj = models.CharField(max_length=14)
+    status = models.CharField(max_length=1, choices=STATUS, blank=False, default='A')
 
     def __str__(self):
         return self.nm_fantasia
@@ -45,7 +52,7 @@ class Pedido_compras(models.Model):
         return f'Pedido {self.pedido} - {self.fornecedor.nm_fantasia}' #.
 
 class Item_pedido_compras(models.Model):
-    ped_compras = models.ForeignKey(Pedido_compras, related_name='itens', on_delete=models.CASCADE) #.
+    ped_compras = models.ForeignKey(Pedido_compras, related_name='item', on_delete=models.CASCADE) #.
     item = models.ForeignKey(Produto, on_delete=models.CASCADE)
     qtd = models.PositiveIntegerField(null=False, blank=False)
     preco_unitario = models.DecimalField(max_digits=10, decimal_places=2)
