@@ -4,12 +4,18 @@ from common.serializers import EnderecoSerializer
 from common.models import Endereco
 
 class FornecedorSerializer(serializers.ModelSerializer):
-    end_forn = EnderecoSerializer()         
+    end_forn = EnderecoSerializer()  #import do endereço para mescla no fornecedor
 
     class Meta:
         model = Fornecedor
+        '''
+            importe dos campos em listas para organizar a sequencia dos labels
+        '''
         fields = ['cod_forn', 'nm_fantasia', 'rz_social', 'cnpj', 'ie', 'nm_contato', 'email', 'telefone', 'status', 'end_forn']         
 
+    '''
+        Função que valida endereço já existe. Se sim, o exclui e habilita a criação. Se não, somente habilita a criação
+    '''
     def create(self, validated_data):
         endereco_data = validated_data.pop('end_forn', None)
 
@@ -21,6 +27,9 @@ class FornecedorSerializer(serializers.ModelSerializer):
         fornecedor = Fornecedor.objects.create(end_forn=endereco, **validated_data)
         return fornecedor  
 
+    '''
+        Função que estrai, atualiza e cria itens no pedido de compras
+    '''
     def update(self, instance, validated_data):
         endereco_data = validated_data.pop('end_forn', None)
         
@@ -59,7 +68,6 @@ class Pedido_comprasSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pedido_compras
         fields = '__all__'
-
 
 class EstoqueSerializer(serializers.ModelSerializer):
     class Meta:

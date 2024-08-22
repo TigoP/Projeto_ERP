@@ -1,6 +1,9 @@
 from django.contrib import admin
 from compras.models import Fornecedor, Produto, Pedido_compras, Item_pedido_compras, Estoque
 
+'''
+    Estilização apresentada no acesso Admin
+'''
 class Fornecedores(admin.ModelAdmin):
     list_display = ('cod_forn', 'nm_fantasia', 'rz_social', 'cnpj', 'ie', 'nm_contato', 'email', 'telefone', 'status', 'end_forn')
     list_display_links = ('cod_forn', 'nm_fantasia',)
