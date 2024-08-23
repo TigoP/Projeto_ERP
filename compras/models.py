@@ -100,11 +100,27 @@ class Doc_entrada(models.Model):
         ('NFS', 'NFS'),
         ('CTE', 'CT-e'),
     )
+    CONDICAO = (
+        ('001', 'A vista'),
+        ('002', '7 dias'),
+        ('003', '30 dias'),
+        ('020', '30,60'),
+        ('021', '30,60,90'),
+    )
+    FORMA = (
+        ('R$', 'Dinheiro'),
+        ('PIX', 'Pix'),
+        ('CD', 'Cartao Devito'),
+        ('CC', 'Cartao Credito'),
+    )
     num_nota = models.IntegerField()
     serie_nt = models.CharField(max_length=3)
     dt_emissao = models.DateField()
     cod_forn = models.ForeignKey(Fornecedor, on_delete=models.CASCADE)
     tipo_nf = models.CharField(max_length=3, choices=ESPECIE, blank=False, default='')
+    cond_pgto = models.CharField(max_length=3, choices=CONDICAO, blank=False, default='')
+    forma_pgto = models.CharField(max_length=3, choices=FORMA, blank=False, default='')
+    vencimento = models.DateField()
     item_nf_compra = models.ForeignKey(Produto, on_delete=models.CASCADE)
     qtd_item = models.PositiveIntegerField(default=1)
     preco_unitario = models.DecimalField(max_digits=10, decimal_places=2, default=1)

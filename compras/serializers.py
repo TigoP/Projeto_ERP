@@ -1,3 +1,4 @@
+from datetime import timedelta
 from rest_framework import serializers
 from compras.models import Fornecedor, Produto, Pedido_compras, Item_pedido_compras, Estoque, Doc_entrada
 from common.serializers import EnderecoSerializer
@@ -81,7 +82,7 @@ class Doc_entradaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Doc_entrada
-        fields = ['num_nota', 'serie_nt', 'dt_emissao', 'cod_forn', 'tipo_nf', 'item_nf_compra', 'qtd_item', 'preco_unitario', 'valor_total']
+        fields = ['num_nota', 'serie_nt', 'dt_emissao', 'cod_forn', 'tipo_nf', 'cond_pgto', 'forma_pgto', 'vencimento', 'item_nf_compra', 'qtd_item', 'preco_unitario', 'valor_total']
 
     def get_valor_total(self, obj):
         return obj.calcular_vlr_total()
@@ -90,5 +91,28 @@ class Doc_entradaSerializer(serializers.ModelSerializer):
         produto_data = validated_data.pop('item_nf_compra') # Extrai dados do produto
         produto = Produto.objects.create(**produto_data) # Cria o produto
         doc_entrada = Doc_entrada.objects.create(item_nf_compra=produto, **validated_data) # Cria o documento de entrada com o produto
+
+        '''if doc_entrada.cond_pgto == '020':
+            valor_total = doc_entrada.calcular_vlr_total()
+            valor_parcela = valor_total / 2
+
+            vencimento1 = doc_entrada.dt_emissao + timedelta(days=30)
+            Contas_pagar.objects.create(
+                descricao=f"Parcela 1 - {doc_entrada.num_nota}",
+                valor=valor_parcela,
+                data_vencimento=vencimento1,
+                status='Pendente',
+                fornecedor=doc_entrada.cod_forn
+            )
+
+            # Segunda parcela - 60 dias
+            vencimento2 = doc_entrada.dt_emissao + timedelta(days=60)
+            Contas_pagar.objects.create(
+                descricao=f"Parcela 2 - {doc_entrada.num_nota}",
+                valor=valor_parcela,
+                data_vencimento=vencimento2,
+                status='Pendente',
+                fornecedor=doc_entrada.cod_forn
+            )'''
         return doc_entrada
 #--------------------------------------------------------------------------------------#

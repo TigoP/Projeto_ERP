@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'compras',
     'rest_framework',
     'common',
+    'financeiro',
 ]
 
 MIDDLEWARE = [

@@ -35,7 +35,7 @@ class Estoques(admin.ModelAdmin):
 admin.site.register(Estoque, Estoques)
 #--------------------------------------------------------------------------------------#
 class Docs_entradas(admin.ModelAdmin):
-    list_display = ('num_nota', 'serie_nt', 'dt_emissao', 'cod_forn', 'tipo_nf', 'item_nf_compra')
+    list_display = ('num_nota', 'serie_nt', 'dt_emissao', 'cod_forn', 'tipo_nf', 'cond_pgto', 'forma_pgto', 'vencimento', 'item_nf_compra')
     list_display_links = ('num_nota', 'cod_forn',)
     search_fields = ('num_nota',)
 admin.site.register(Doc_entrada, Docs_entradas)
