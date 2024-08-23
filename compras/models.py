@@ -2,7 +2,7 @@ from django.db import models
 from common.models import Endereco
 
 '''
-    Criação de cadastros a serem utilizados nas funções.
+    Classes de cadastros a serem utilizadas nas funções.
 '''
 
 class Fornecedor(models.Model):
@@ -24,7 +24,7 @@ class Fornecedor(models.Model):
 
     def __str__(self):
         return f'{self.cod_forn} - {self.rz_social}'
-
+#--------------------------------------------------------------------------------------#
 class Produto(models.Model):
     MEDIDA = (
         ('UN', 'Unidade'),
@@ -41,7 +41,7 @@ class Produto(models.Model):
 
     def __str__(self):
         return f'{self.cod_prod} - {self.descricao}'
-    
+#--------------------------------------------------------------------------------------#    
 '''
     Criação de atividades que utilizarão os cadastros criados.
 '''
@@ -49,7 +49,7 @@ class Produto(models.Model):
 class Pedido_compras(models.Model):
     STATUS = (
         ('A', 'Aberto'),
-        ('F', 'Fechado')
+        ('F', 'Fechado'),
     )
     pedido = models.CharField(max_length=6) #primary_key=True
     emissao = models.DateField()
@@ -58,7 +58,7 @@ class Pedido_compras(models.Model):
 
     def __str__(self):
         return f'Pedido {self.pedido} - {self.fornecedor.nm_fantasia}' 
-
+#--------------------------------------------------------------------------------------#
 class Item_pedido_compras(models.Model):
     ped_compras = models.ForeignKey(Pedido_compras, related_name='item', on_delete=models.CASCADE) 
     item = models.ForeignKey(Produto, on_delete=models.CASCADE)
@@ -75,7 +75,7 @@ class Item_pedido_compras(models.Model):
     
     def __str__(self):
         return f'{self.qtd} x {self.item.descricao}'
-    
+#--------------------------------------------------------------------------------------#    
 class Estoque(models.Model):
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
     saldo_est = models.FloatField()
@@ -93,4 +93,25 @@ class Estoque(models.Model):
 
     def __str__(self):
         return f'{self.produto.descricao} - {self.saldo_est} em estoque' 
-    
+#--------------------------------------------------------------------------------------#    
+class Doc_entrada(models.Model):
+    ESPECIE = (
+        ('NFE', 'NF-e'),
+        ('NFS', 'NFS'),
+        ('CTE', 'CT-e'),
+    )
+    num_nota = models.IntegerField()
+    serie_nt = models.CharField(max_length=3)
+    dt_emissao = models.DateField()
+    cod_forn = models.ForeignKey(Fornecedor, on_delete=models.CASCADE)
+    tipo_nf = models.CharField(max_length=3, choices=ESPECIE, blank=False, default='')
+    item_nf_compra = models.ForeignKey(Produto, on_delete=models.CASCADE)
+    qtd_item = models.PositiveIntegerField(default=1)
+    preco_unitario = models.DecimalField(max_digits=10, decimal_places=2, default=1)
+
+    def calcular_vlr_total(self): 
+        return self.qtd_item * self.preco_unitario
+
+    def __str__(self):
+        return f'{self.num_nota} - {self.tipo_nf} - {self.cod_forn.rz_social}'
+#--------------------------------------------------------------------------------------#

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from compras.models import Fornecedor, Produto, Pedido_compras, Item_pedido_compras, Estoque
+from compras.models import Fornecedor, Produto, Pedido_compras, Item_pedido_compras, Estoque, Doc_entrada
 from common.serializers import EnderecoSerializer
 from common.models import Endereco
 
@@ -52,24 +52,43 @@ class FornecedorSerializer(serializers.ModelSerializer):
         instance.telefone = validated_data.get('telefone', instance.telefone)
         instance.status = validated_data.get('cnpj', instance.status)
         instance.save()  
-
+#--------------------------------------------------------------------------------------#
 class ProdutoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Produto
-        fields = '__all__'
-
+        fields = ['cod_prod', 'descricao', 'un_medida']
+#--------------------------------------------------------------------------------------#
 class Item_pedido_comprasSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item_pedido_compras
         fields = ['ped_compras', 'item', 'qtd', 'preco_unitario', 'valor_total']
-
+#--------------------------------------------------------------------------------------#
 class Pedido_comprasSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pedido_compras
-        fields = '__all__'
+        fields = ['pedido', 'emissao', 'fornecedor', 'status']
 
+#--------------------------------------------------------------------------------------#
 class EstoqueSerializer(serializers.ModelSerializer):
     class Meta:
         model = Estoque
         fields = '__all__'
+#--------------------------------------------------------------------------------------#
+class Doc_entradaSerializer(serializers.ModelSerializer):
+    item_nf_compra = ProdutoSerializer()
+    valor_total = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Doc_entrada
+        fields = ['num_nota', 'serie_nt', 'dt_emissao', 'cod_forn', 'tipo_nf', 'item_nf_compra', 'qtd_item', 'preco_unitario', 'valor_total']
+
+    def get_valor_total(self, obj):
+        return obj.calcular_vlr_total()
+    
+    def create(self, validated_data):
+        produto_data = validated_data.pop('item_nf_compra') # Extrai dados do produto
+        produto = Produto.objects.create(**produto_data) # Cria o produto
+        doc_entrada = Doc_entrada.objects.create(item_nf_compra=produto, **validated_data) # Cria o documento de entrada com o produto
+        return doc_entrada
+#--------------------------------------------------------------------------------------#
