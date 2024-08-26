@@ -3,6 +3,7 @@ from rest_framework import serializers
 from compras.models import Fornecedor, Produto, Pedido_compras, Item_pedido_compras, Estoque, Doc_entrada
 from common.serializers import EnderecoSerializer
 from common.models import Endereco
+from financeiro.models import Contas_pagar
 
 class FornecedorSerializer(serializers.ModelSerializer):
     end_forn = EnderecoSerializer()  #import do endereço para mescla no fornecedor
@@ -77,6 +78,7 @@ class EstoqueSerializer(serializers.ModelSerializer):
         fields = '__all__'
 #--------------------------------------------------------------------------------------#
 class Doc_entradaSerializer(serializers.ModelSerializer):
+
     item_nf_compra = ProdutoSerializer()
     valor_total = serializers.SerializerMethodField()
 
@@ -88,16 +90,19 @@ class Doc_entradaSerializer(serializers.ModelSerializer):
         return obj.calcular_vlr_total()
     
     def create(self, validated_data):
-        produto_data = validated_data.pop('item_nf_compra') # Extrai dados do produto
-        produto = Produto.objects.create(**produto_data) # Cria o produto
-        doc_entrada = Doc_entrada.objects.create(item_nf_compra=produto, **validated_data) # Cria o documento de entrada com o produto
+        produto_data = validated_data.pop('item_nf_compra')
+        produto = Produto.objects.create(**produto_data)
+        doc_entrada = Doc_entrada.objects.create(item_nf_compra=produto, **validated_data)
 
-        '''if doc_entrada.cond_pgto == '020':
-            valor_total = doc_entrada.calcular_vlr_total()
+        valor_total = doc_entrada.calcular_vlr_total()
+
+        if doc_entrada.cond_pgto == '020':
             valor_parcela = valor_total / 2
-
             vencimento1 = doc_entrada.dt_emissao + timedelta(days=30)
+            vencimento2 = doc_entrada.dt_emissao + timedelta(days=60)         
+            
             Contas_pagar.objects.create(
+                documento = doc_entrada,
                 descricao=f"Parcela 1 - {doc_entrada.num_nota}",
                 valor=valor_parcela,
                 data_vencimento=vencimento1,
@@ -113,6 +118,15 @@ class Doc_entradaSerializer(serializers.ModelSerializer):
                 data_vencimento=vencimento2,
                 status='Pendente',
                 fornecedor=doc_entrada.cod_forn
-            )'''
+            )
+        else:
+            Contas_pagar.objects.create(
+                documento=doc_entrada,
+                descricao=f"Pagamento integral - {doc_entrada.num_nota}",
+                valor=valor_total,
+                data_vencimento=doc_entrada.vencimento,
+                status='Pendente',
+                fornecedor=doc_entrada.cod_forn
+            )
         return doc_entrada
 #--------------------------------------------------------------------------------------#
