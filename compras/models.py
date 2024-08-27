@@ -35,7 +35,7 @@ class Produto(models.Model):
         ('CM', 'Centímetro'),
         ('M', 'Metro'),
     )
-    cod_prod = models.CharField(max_length=6) #primary_key=True
+    cod_prod = models.CharField(max_length=6, unique=True)
     descricao = models.TextField(max_length=100)
     un_medida = models.CharField(max_length=2, choices=MEDIDA, blank=False, default='UN')
 
@@ -110,7 +110,7 @@ class Doc_entrada(models.Model):
     FORMA = (
         ('R$', 'Dinheiro'),
         ('PIX', 'Pix'),
-        ('CD', 'Cartao Devito'),
+        ('CD', 'Cartao Debito'),
         ('CC', 'Cartao Credito'),
     )
     num_nota = models.IntegerField()
