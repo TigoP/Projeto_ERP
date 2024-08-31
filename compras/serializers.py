@@ -127,9 +127,6 @@ class Doc_entradaSerializer(serializers.ModelSerializer):
         '''
         Verifica se ha itens cadastrados, salva, extrai e apensa ao doc de entrada, possibilitando a criação de novo item
         '''
-        #produto_data = validated_data.pop('item_nf_compra') 
-        #produto = Produto.objects.create(**produto_data)
-        #doc_entrada = Doc_entrada.objects.create(item_nf_compra=produto, **validated_data)
         doc_entrada = Doc_entrada.objects.create(**validated_data)
 
         try:
@@ -141,7 +138,7 @@ class Doc_entradaSerializer(serializers.ModelSerializer):
             estoque = Estoque.objects.get(doc_entrada.item_nf_compra)
             estoque.adicionar_estoque(doc_entrada.qtd_item)
         except:
-            Estoque.objects.create(doc_entrada.item_nf_compra, saldo_est=doc_entrada.qtd_item)
+            Estoque.objects.create(produto=doc_entrada.item_nf_compra, saldo_est=doc_entrada.qtd_item)
 
         valor_total = doc_entrada.calcular_vlr_total()
 
