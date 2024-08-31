@@ -7,9 +7,15 @@ class Conta_bancariaSerializer(serializers.ModelSerializer):
         fields = '__all__'
 #--------------------------------------------------------------------------------------#
 class Contas_pagarSerializer(serializers.ModelSerializer):
+    nome_forn = serializers.SerializerMethodField()
+
     class Meta:
         model = Contas_pagar
-        fields = '__all__'
+        fields = ['id', 'descricao', 'valor', 'data_vencimento', 'status', 'documento', 'fornecedor', 'nome_forn']
+
+    def get_nome_forn(self, obj):
+        return f'{obj.fornecedor.id} - {obj.fornecedor.rz_social}'
+
 #--------------------------------------------------------------------------------------#
 class Contas_receberSerializer(serializers.ModelSerializer):
     class Meta:

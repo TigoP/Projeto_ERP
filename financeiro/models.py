@@ -23,7 +23,7 @@ class Contas_pagar(models.Model):
 
     def __str__(self):
         return f'Valor a pagar de {self.fornecedor.rz_social} referente ao documento {self.documento.num_nota}'
-    
+#--------------------------------------------------------------------------------------#    
 class Contas_receber(models.Model):
     documento = models.CharField(max_length=10) #forenkey NF saida
     descricao = models.CharField(max_length=100)
@@ -34,7 +34,7 @@ class Contas_receber(models.Model):
 
     #def __str__(self):
     #    return f'Valor a receber de {self.cliente.rz_social} referente ao documento {self.documento.num_nota}'
-
+#--------------------------------------------------------------------------------------#
 class Mov_bancario(models.Model):
     dt_inicio = models.DateField()
     dt_fim = models.DateField()
@@ -45,3 +45,4 @@ class Mov_bancario(models.Model):
 
     def __str__(self):
         return f'Saldo da conta: {self.saldo_periodo}'
+#--------------------------------------------------------------------------------------#

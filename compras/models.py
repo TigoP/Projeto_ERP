@@ -11,7 +11,7 @@ class Fornecedor(models.Model):
         ('I', 'Inativo'),
     )
 
-    cod_forn = models.CharField(max_length=6) #primary_key=True
+    cod_forn = models.CharField(max_length=6)
     nm_fantasia = models.CharField(max_length=150)
     rz_social = models.CharField(max_length=150)
     end_forn = models.ForeignKey(Endereco, on_delete=models.CASCADE)
@@ -51,7 +51,7 @@ class Pedido_compras(models.Model):
         ('A', 'Aberto'),
         ('F', 'Fechado'),
     )
-    pedido = models.CharField(max_length=6) #primary_key=True
+    pedido = models.CharField(max_length=6)
     emissao = models.DateField()
     fornecedor = models.ForeignKey(Fornecedor, on_delete=models.CASCADE)
     status = models.CharField(max_length=1, choices= STATUS, blank=False, default='A')
@@ -67,6 +67,9 @@ class Item_pedido_compras(models.Model):
     valor_total = models.DecimalField(max_digits=10, decimal_places=2, editable=False) 
 
     def save(self, *args, **kwargs): 
+        '''
+        Função que sobrescreve o save do PC usando a função calcular total, calcula e salva e chama o save da classe pai
+        '''
         self.valor_total = self.calcular_vlr_total() 
         super().save(*args, **kwargs) 
 
