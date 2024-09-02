@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.urls import path, include
 from compras.views import FornecedorViewSet, ProdutoViewSet, Pedido_comprasViewSet, Item_pedido_comprasViewSet, EstoqueViewSet, Doc_entradaViewSet
-from common.views import EnderecoViewSet
 from financeiro.views import Conta_bancariaViewSet, Contas_pagarViewSet, Contas_receberViewSet, Mov_bancarioViewSet
+from common.views import EnderecoViewSet
+from dp_rh.views import DepartamentoViewSet, CargoViewSet
+
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -17,6 +19,8 @@ router.register('conta_bancaria', Conta_bancariaViewSet, basename='Conta_bancari
 router.register('contas_pagar', Contas_pagarViewSet, basename='Contas_pagar')
 router.register('contas_receber', Contas_receberViewSet, basename='Contas_receber')
 router.register('mov_bancario', Mov_bancarioViewSet, basename='Mov_bancario')
+router.register('departamento', DepartamentoViewSet, basename='Departamento')
+router.register('cargo', CargoViewSet, basename='Cargo')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

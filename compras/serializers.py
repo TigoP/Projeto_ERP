@@ -5,7 +5,7 @@ from compras.models import Fornecedor, Produto, Pedido_compras, Item_pedido_comp
 from common.serializers import EnderecoSerializer
 from common.models import Endereco
 from financeiro.models import Contas_pagar
-from compras.validators import code_invalid, cnpj_invalid, ie_invalid #,num_nota_invalid
+from compras.validators import cpf_invalid, cnpj_invalid, ie_invalid, cod_prod_invalid #,num_nota_invalid
 
 class FornecedorSerializer(serializers.ModelSerializer):
     end_forn = EnderecoSerializer()  #import do endereço para mescla no fornecedor
@@ -21,7 +21,7 @@ class FornecedorSerializer(serializers.ModelSerializer):
         '''
         Função que valida possiveis erros
         '''
-        if code_invalid(dados['cod_forn']):
+        if cpf_invalid(dados['cod_forn']):
             raise serializers.ValidationError({'cod_forn': 'O fornecedor deve conter 6 digitos!'})
         if cnpj_invalid(dados['cnpj']):
             raise serializers.ValidationError({'cnpj': 'O CNPJ deve conter 14 digitos!'})
@@ -76,7 +76,7 @@ class ProdutoSerializer(serializers.ModelSerializer):
         fields = ['cod_prod', 'descricao', 'un_medida']
     
     def validate(self, dados):
-        if code_invalid(dados['cod_prod']):
+        if cod_prod_invalid(dados['cod_prod']):
             raise serializers.ValidationError({'cod_prod': 'O codigo deve conter 6 digitos'})
         return dados
 #--------------------------------------------------------------------------------------#
