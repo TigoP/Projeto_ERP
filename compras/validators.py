@@ -1,8 +1,8 @@
 def cpf_invalid(cpf):
     return len(cpf) !=6
 
-def cod_prod_invalid(cpf):
-    return len(cpf) !=6
+def cod_prod_invalid(cod_prod):
+    return len(cod_prod) !=6
 
 #def num_nota_invalid(num_nota):
 #    return len(num_nota) !=9

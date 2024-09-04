@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from common.models import Endereco
 
 '''
     Classes de cadastros a serem utilizadas nas funções.
@@ -43,3 +44,45 @@ def gerar_cod_cargo(sender, instance, **kwargs):
         else:
             instance.cod_cargo = '000001'
 #--------------------------------------------------------------------------------------#
+class Funcionario(models.Model):
+    SITUACAO = (
+        ('A', 'Ativo'),
+        ('I', 'Inativo'),
+    )
+    SEXO = (
+        ('M', 'Masculino'),
+        ('F', 'Feminino'),
+    )
+    CIVIL = (
+        ('C', 'Casado'),
+        ('S', 'Solteiro'),
+        ('V', 'Viuvo'),
+        ('D', 'Disquitado'),
+    )
+    cod_funci = models.CharField(max_length= 6, unique= True, blank= True)
+    nm_funcionario = models.CharField(max_length= 30)
+    cpf = models.CharField(max_length= 11)
+    rg = models.CharField(max_length= 10)
+    dt_nasc = models.DateField()
+    nacionalidade = models.CharField(max_length= 15)
+    estado_civil = models.CharField(max_length= 1, choices=CIVIL, blank= False, default= 'S')
+    sexo = models.CharField(max_length= 1, choices= SEXO, blank= False, default= "M")
+    cargo_func = models.ForeignKey(Cargo, on_delete= models.CASCADE)
+    salario = models.DecimalField(max_digits= 10, decimal_places= 2)
+    dt_admissao = models.DateField()
+    depart_func = models.ForeignKey(Departamento, on_delete= models.CASCADE)
+    situacao = models.CharField(max_length= 1, choices=SITUACAO, blank=False, default= "A")
+    end_func = models.ForeignKey(Endereco, on_delete= models.CASCADE)
+
+    def __str__(self):
+        return f'{self.nm_funcionario} - {self.cargo_func}'
+    
+@receiver(pre_save, sender= Funcionario)
+def gerar_cod_funci(sender, instance, **Kwargs):
+    if not instance.cod_funci:
+        ultimo_cod = Funcionario.objects.all().order_by('id').last()
+        if ultimo_cod:
+            novo_cod = int(ultimo_cod.cod_funci) + 1
+            instance.cod_funci = f'{novo_cod:06d}'
+        else:
+            instance.cod_funci = '000001'

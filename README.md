@@ -36,4 +36,4 @@ python manage.py runserver
 ~~~
 
 9. Verificar se o endpoint está funcional pelo navegador de internet através do endereço:
-   http://localhost:8000/compras
+   http://localhost:8000/
