@@ -1,9 +1,9 @@
-from django.contrib import admin
-from django.urls import path, include
 from compras.views import FornecedorViewSet, ProdutoViewSet, Pedido_comprasViewSet, Item_pedido_comprasViewSet, EstoqueViewSet, Doc_entradaViewSet
+from dp_rh.views import DepartamentoViewSet, CargoViewSet, FuncionarioViewSet, Vencimento_salViewSet, Desconto_salViewSet
 from financeiro.views import Conta_bancariaViewSet, Contas_pagarViewSet, Contas_receberViewSet, Mov_bancarioViewSet
 from common.views import EnderecoViewSet
-from dp_rh.views import DepartamentoViewSet, CargoViewSet, FuncionarioViewSet
+from django.contrib import admin
+from django.urls import path, include
 
 from rest_framework import routers
 
@@ -24,6 +24,8 @@ router.register('mov_bancario', Mov_bancarioViewSet, basename='Mov_bancario')
 router.register('departamento', DepartamentoViewSet, basename='Departamento')
 router.register('cargo', CargoViewSet, basename='Cargo')
 router.register('funcionario',FuncionarioViewSet, basename= 'Funcionario')
+router.register('vencimento_sal', Vencimento_salViewSet, basename= 'Vencimento_sal')
+router.register('desconto_sal', Desconto_salViewSet, basename= 'Desconto_sal')
 #--------------------------------------------------------------------------------------#
 
 urlpatterns = [

@@ -1,14 +1,20 @@
-from datetime import timedelta
-from rest_framework import serializers
-from django.db import transaction
 from compras.models import Fornecedor, Produto, Pedido_compras, Item_pedido_compras, Estoque, Doc_entrada
+from compras.validators import cnpj_invalid, ie_invalid 
 from common.serializers import EnderecoSerializer
-from common.models import Endereco
 from financeiro.models import Contas_pagar
-from compras.validators import cpf_invalid, cnpj_invalid, ie_invalid, cod_prod_invalid #,num_nota_invalid
+from rest_framework import serializers
+from common.models import Endereco
+from django.db import transaction
+from datetime import timedelta
 
 class FornecedorSerializer(serializers.ModelSerializer):
     end_forn = EnderecoSerializer()  #import do endereço para mescla no fornecedor
+    cod_forn = serializers.CharField(
+        max_length=6, 
+        required=False, 
+        allow_blank=True, 
+        help_text="Deixe este campo em branco"
+    )
 
     class Meta:
         model = Fornecedor
@@ -21,8 +27,6 @@ class FornecedorSerializer(serializers.ModelSerializer):
         '''
         Função que valida possiveis erros
         '''
-        if cpf_invalid(dados['cod_forn']):
-            raise serializers.ValidationError({'cod_forn': 'O fornecedor deve conter 6 digitos!'})
         if cnpj_invalid(dados['cnpj']):
             raise serializers.ValidationError({'cnpj': 'O CNPJ deve conter 14 digitos!'})
         if ie_invalid(dados['ie']):
@@ -71,14 +75,15 @@ class FornecedorSerializer(serializers.ModelSerializer):
 
 #--------------------------------------------------------------------------------------#
 class ProdutoSerializer(serializers.ModelSerializer):
+    cod_prod = serializers.CharField(
+        max_length=6, 
+        required=False, 
+        allow_blank=True, 
+        help_text="Deixe este campo em branco"
+    )
     class Meta:
         model = Produto
         fields = ['cod_prod', 'descricao', 'un_medida']
-    
-    def validate(self, dados):
-        if cod_prod_invalid(dados['cod_prod']):
-            raise serializers.ValidationError({'cod_prod': 'O codigo deve conter 6 digitos'})
-        return dados
 #--------------------------------------------------------------------------------------#
 class Item_pedido_comprasSerializer(serializers.ModelSerializer):
     item_nm = serializers.SerializerMethodField() #permite personalizar o atributo
@@ -92,6 +97,12 @@ class Item_pedido_comprasSerializer(serializers.ModelSerializer):
 #--------------------------------------------------------------------------------------#
 class Pedido_comprasSerializer(serializers.ModelSerializer):
     nome_forn = serializers.SerializerMethodField()
+    pedido = serializers.CharField(
+        max_length=6, 
+        required=False, 
+        allow_blank=True, 
+        help_text="Deixe este campo em branco"
+    )
 
     class Meta:
         model = Pedido_compras

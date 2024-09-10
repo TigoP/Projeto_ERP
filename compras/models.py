@@ -1,5 +1,7 @@
-from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from common.models import Endereco
+from django.db import models
 
 '''
     Classes de cadastros a serem utilizadas nas funções.
@@ -11,7 +13,7 @@ class Fornecedor(models.Model):
         ('I', 'Inativo'),
     )
 
-    cod_forn = models.CharField(max_length=6)
+    cod_forn = models.CharField(max_length = 6, unique = True, blank = True)
     nm_fantasia = models.CharField(max_length=150)
     rz_social = models.CharField(max_length=150)
     end_forn = models.ForeignKey(Endereco, on_delete=models.CASCADE)
@@ -24,6 +26,16 @@ class Fornecedor(models.Model):
 
     def __str__(self):
         return f'{self.cod_forn} - {self.rz_social}'
+    
+@receiver(pre_save, sender=Fornecedor)
+def gerar_cod_forn(sender, instance, **kwargs):
+    if not instance.cod_forn:
+        ultimo_cod = Fornecedor.objects.all().order_by('id').last()
+        if ultimo_cod:
+            novo_cod = int(ultimo_cod.cod_forn) + 1
+            instance.cod_forn = f'{novo_cod:06d}'
+        else:
+            instance.cod_forn = '000001'
 #--------------------------------------------------------------------------------------#
 class Produto(models.Model):
     MEDIDA = (
@@ -41,6 +53,16 @@ class Produto(models.Model):
 
     def __str__(self):
         return f'{self.cod_prod} - {self.descricao}'
+
+@receiver(pre_save, sender=Produto)
+def gerar_cod_prod(sender, instance, **kwargs):
+    if not instance.cod_prod:
+        ultimo_cod = Produto.objects.all().order_by('id').last()
+        if ultimo_cod:
+            novo_cod = int(ultimo_cod.cod_prod) + 1
+            instance.cod_prod = f'{novo_cod:06d}'
+        else:
+            instance.cod_prod = '000001'
 #--------------------------------------------------------------------------------------#    
 '''
     Criação de atividades que utilizarão os cadastros criados.
@@ -58,6 +80,16 @@ class Pedido_compras(models.Model):
 
     def __str__(self):
         return f'Pedido {self.pedido} - {self.fornecedor.nm_fantasia}' 
+
+@receiver(pre_save, sender=Pedido_compras)
+def gerar_pedido(sender, instance, **kwargs):
+    if not instance.pedido:
+        ultimo_cod = Pedido_compras.objects.all().order_by('id').last()
+        if ultimo_cod:
+            novo_cod = int(ultimo_cod.pedido) + 1
+            instance.pedido = f'{novo_cod:06d}'
+        else:
+            instance.pedido = '000001'
 #--------------------------------------------------------------------------------------#
 class Item_pedido_compras(models.Model):
     ped_compras = models.ForeignKey(Pedido_compras, related_name='item', on_delete=models.CASCADE) 

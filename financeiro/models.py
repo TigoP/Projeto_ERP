@@ -1,5 +1,5 @@
-from django.db import models
 from compras.models import Doc_entrada, Fornecedor
+from django.db import models
 
 class Conta_bancaria(models.Model):
     BANCOS = (

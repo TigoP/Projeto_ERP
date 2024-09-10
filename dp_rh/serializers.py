@@ -1,7 +1,7 @@
-from rest_framework import serializers
-from dp_rh.models import Departamento, Cargo, Funcionario
-from common.models import Endereco
+from dp_rh.models import Departamento, Cargo, Funcionario, Vencimento_sal, Desconto_sal
 from common.serializers import EnderecoSerializer
+from rest_framework import serializers
+from common.models import Endereco
 
 class DepartamentoSerializer(serializers.ModelSerializer):
     cod_dep = serializers.CharField(
@@ -51,3 +51,20 @@ class FuncionarioSerializer(serializers.ModelSerializer):
         funcionario = Funcionario.objects.create(end_func=endereco, **validated_data)
         
         return funcionario
+#--------------------------------------------------------------------------------------#
+class Vencimento_salSerializer(serializers.ModelSerializer):
+    sal_base = Cargo()
+    funcionario = Funcionario()
+
+    class Meta:
+        model = Vencimento_sal
+        fields = '__all__'
+#--------------------------------------------------------------------------------------#    
+class Desconto_salSerializer(serializers.ModelSerializer):
+    sal_base = Cargo()   
+    funcionario = Funcionario()
+
+    class Meta:
+        model = Desconto_sal
+        fields = '__all__'
+#--------------------------------------------------------------------------------------#

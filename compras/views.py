@@ -1,5 +1,5 @@
-from compras.models import Fornecedor, Produto, Pedido_compras, Item_pedido_compras, Estoque, Doc_entrada
 from compras.serializers import FornecedorSerializer, ProdutoSerializer, Pedido_comprasSerializer, Item_pedido_comprasSerializer, EstoqueSerializer, Doc_entradaSerializer
+from compras.models import Fornecedor, Produto, Pedido_compras, Item_pedido_compras, Estoque, Doc_entrada
 from rest_framework import viewsets
 
 class FornecedorViewSet(viewsets.ModelViewSet):
