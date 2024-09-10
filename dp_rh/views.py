@@ -7,20 +7,23 @@ from django.shortcuts import render
 class DepartamentoViewSet(viewsets.ModelViewSet):
     queryset = Departamento.objects.all()
     serializer_class = DepartamentoSerializer
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['nm_dep']
+    search_fields = ['nm_dep']
 #--------------------------------------------------------------------------------------#
 class CargoViewSet(viewsets.ModelViewSet):
     queryset = Cargo.objects.all()
     serializer_class = CargoSerializer
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['nm_funcao']
+    search_fields = ['nm_funcao', 'departamento']
 #--------------------------------------------------------------------------------------#
 class FuncionarioViewSet(viewsets.ModelViewSet):
     queryset = Funcionario.objects.all()
     serializer_class = FuncionarioSerializer
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['nm_funcionario']
+    search_fields = ['nm_funcionario', 'cargo_func']
 #--------------------------------------------------------------------------------------#
 class Vencimento_salViewSet(viewsets.ModelViewSet):
     queryset = Vencimento_sal.objects.all()

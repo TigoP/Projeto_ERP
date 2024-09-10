@@ -1,7 +1,8 @@
 from financeiro.serializers import Conta_bancariaSerializer, Contas_pagarSerializer, Contas_receberSerializer, Mov_bancarioSerializer
 from financeiro.models import Conta_bancaria, Contas_pagar, Contas_receber, Mov_bancario
+from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 
 class Conta_bancariaViewSet(viewsets.ModelViewSet):
     queryset = Conta_bancaria.objects.all()
