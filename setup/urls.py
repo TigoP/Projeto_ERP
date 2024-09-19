@@ -18,7 +18,6 @@ class CustomRouter(DefaultRouter):
         class CustomRootView(APIView):
             def get(self, request, *args, **kwargs):
                 return Response({
-                    # Compras
                     'Compras': {
                         'Fornecedores': request.build_absolute_uri('fornecedor/'),
                         'Produtos': request.build_absolute_uri('produto/'),
@@ -28,14 +27,12 @@ class CustomRouter(DefaultRouter):
                         'Endereços': request.build_absolute_uri('endereco/'),
                         'Documentos de Entrada': request.build_absolute_uri('doc_entrada/'),
                     },
-                    # Financeiro
                     'Financeiro': {
                         'Contas Bancárias': request.build_absolute_uri('conta_bancaria/'),
                         'Contas a Pagar': request.build_absolute_uri('contas_pagar/'),
                         'Contas a Receber': request.build_absolute_uri('contas_receber/'),
                         'Movimentações Bancárias': request.build_absolute_uri('mov_bancario/'),
                     },
-                    # Departamento Pessoal / RH
                     'Departamento Pessoal/RH': {
                         'Departamentos': request.build_absolute_uri('departamento/'),
                         'Cargos': request.build_absolute_uri('cargo/'),
@@ -49,7 +46,7 @@ class CustomRouter(DefaultRouter):
 
 #router = routers.DefaultRouter()
 router = CustomRouter()
-#-------------------------------Compras-------------------------------------------------------#
+#Compras--------------------------------------------------------------------------------------#
 router.register('fornecedor', FornecedorViewSet, basename='Fornecedores')
 router.register('produto', ProdutoViewSet, basename='Produtos')
 router.register('pedido_compras', Pedido_comprasViewSet, basename='Pedidos_Compras')
@@ -57,12 +54,12 @@ router.register('item_pedido_compras', Item_pedido_comprasViewSet, basename='Ite
 router.register('estoque', EstoqueViewSet, basename='Estoques')
 router.register('endereco', EnderecoViewSet, basename='Enderecos')
 router.register('doc_entrada', Doc_entradaViewSet, basename='Doc_entrada')
-#------------------------------Financeiro--------------------------------------------------------#
+#Financeiro--------------------------------------------------------------------------------------#
 router.register('conta_bancaria', Conta_bancariaViewSet, basename='Conta_bancaria')
 router.register('contas_pagar', Contas_pagarViewSet, basename='Contas_pagar')
 router.register('contas_receber', Contas_receberViewSet, basename='Contas_receber')
 router.register('mov_bancario', Mov_bancarioViewSet, basename='Mov_bancario')
-#------------------------------DP-RH--------------------------------------------------------#
+#DP-RH--------------------------------------------------------------------------------------#
 router.register('departamento', DepartamentoViewSet, basename='Departamento')
 router.register('cargo', CargoViewSet, basename='Cargo')
 router.register('funcionario',FuncionarioViewSet, basename= 'Funcionario')

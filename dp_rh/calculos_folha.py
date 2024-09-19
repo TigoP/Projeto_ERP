@@ -33,13 +33,31 @@ def calcular_inss(sal_base):
     elif sal_base > 2666.68 and sal_base <= 4000.03:
         return (round(1412.00 * 0.075 + (2666.68 - 1412.00)*0.09 + (sal_base - 2666.68)*0.12, 2))
     else:
-        return (round(1412.00 * 0.075 + (2666.68 - 1412.00)*0.09 + (4000.03 - 2666.68)*0.12 + (sal_base - 4000.03) , 2))    
+        return (round(1412.00 * 0.075 + (2666.68 - 1412.00)*0.09 + (4000.03 - 2666.68)*0.12 + (sal_base - 4000.03)*0.14 , 2))    
             
 def calcular_fgts(sal_base):
-    return sal_base * 0.08
+    return (round(sal_base * 0.08), 2)
+
+def calcular_pensao():
+    return Funcionario.dependentes * 189.59
 
 def calcular_irrf():
-    pass #precisa fazer os calculos ainda
+
+    faixa1 = sal_base <= 2259.20
+    faixa2 = sal_base > 2259.20 and sal_base <= 22826.65
+    faixa3 = sal_base > 22826.65 and sal_base <= 3751.05
+    faixa4 = sal_base > 3751.055 and sal_base <= 4664.68
+
+    if faixa1:
+        return 0
+    elif faixa2:
+        return (sal_base - 169.44 - calcular_inss() - calcular_pensao()) * 0.075
+    elif faixa3:
+        return (sal_base - 381.44 - calcular_inss() - calcular_pensao()) * 0.15 
+    elif faixa4:
+        return (sal_base - 662.77 - calcular_inss() - calcular_pensao()) * 0.225 
+    else:
+        return (sal_base - 896.00 - calcular_inss() - calcular_pensao()) * 0.275 
 
 def calcular_transporte(sal_base):
     vlr_passagem = 4.70
@@ -51,18 +69,7 @@ def calcular_transporte(sal_base):
     else:
         return sal_base * 0.06
 
-def calcular_pensao(sal_base, ):
-
     '''
-    Base de Cálculo (R$) 	 Alíquota (%)	 Parcela a Deduzir do IR (R$)
-    Até 2.259,20*	0	0
-    De 2.259,21 até 2.826,65*	7,5 	       169,44
-    De 2.826,66 até 3.751,05	15	           381,44
-    De 3.751,06 até 4.664,68	22,5	       662,77
-    Acima de 4.664,68	        27,5	       896,00
-
-    Fonte: Agência Senado
-
         irrf = models.DecimalField (max_digits=10, decimal_places=2)
         alimentacao = models.DecimalField (max_digits=10, decimal_places=2)
         atrasos = models.DecimalField (max_digits=10, decimal_places=2)
